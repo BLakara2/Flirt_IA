@@ -1,0 +1,86 @@
+.wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px 36px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(0,0,0,0.6);
+  animation: fadeUp 0.5s ease both;
+}
+
+.icon { font-size: 52px; margin-bottom: 18px; }
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: var(--accent2);
+  margin-bottom: 10px;
+}
+
+.desc {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+
+.desc strong { color: var(--text); font-weight: 500; }
+
+.input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 16px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.input:focus { border-color: var(--accent); }
+.input::placeholder { color: var(--muted); letter-spacing: 0; }
+
+.btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), #8b1a3a);
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px var(--glow);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px var(--glow);
+}
+
+.note {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.note a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.note a:hover { text-decoration: underline; }
