@@ -1,21 +1,30 @@
 // ─── components/ChatArea.jsx ──────────────────────────────────────────────────
 
 import { useEffect, useRef } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { QUICK_PROMPTS } from '../constants.js'
 import styles from './ChatArea.module.css'
 
 // ── Message ───────────────────────────────────────────────────────────────────
 
-function Message({ msg }) {
+function Message({ msg, streaming }) {
   const isUser = msg.role === 'user'
+
   return (
     <div className={`${styles.message} ${isUser ? styles.user : styles.ai}`}>
       <div className={styles.avatar}>{isUser ? '😎' : '💘'}</div>
       <div className={styles.content}>
-        <div className={styles.bubble} style={{ whiteSpace: 'pre-wrap' }}>
-          {msg.content}
-          {/* blinking cursor while the bubble is still empty or being filled */}
-          {!isUser && msg.streaming && <span className={styles.cursor} />}
+        <div className={styles.bubble}>
+          {isUser ? (
+            // User messages: plain text
+            <span style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</span>
+          ) : (
+            // AI messages: rendered Markdown
+            <div className={styles.markdown}>
+              <ReactMarkdown>{msg.content}</ReactMarkdown>
+              {streaming && <span className={styles.cursor} />}
+            </div>
+          )}
         </div>
         <div className={styles.time}>{msg.time}</div>
       </div>
@@ -23,7 +32,7 @@ function Message({ msg }) {
   )
 }
 
-// ── TypingIndicator (shown while waiting for FIRST chunk) ─────────────────────
+// ── TypingIndicator ───────────────────────────────────────────────────────────
 
 function TypingIndicator() {
   return (
@@ -49,7 +58,6 @@ export default function ChatArea({ messages, loading, streaming, onQuickPrompt }
     }
   }, [messages, loading])
 
-  // Last message is the one being streamed right now
   const lastIsStreaming = streaming && messages.length > 0 &&
     messages[messages.length - 1].role === 'assistant'
 
@@ -80,7 +88,6 @@ export default function ChatArea({ messages, loading, streaming, onQuickPrompt }
               streaming={lastIsStreaming && i === messages.length - 1}
             />
           ))}
-          {/* Show dots only while waiting for first chunk, not during streaming */}
           {loading && <TypingIndicator />}
         </>
       )}

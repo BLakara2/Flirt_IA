@@ -12,8 +12,8 @@ const GEMINI_URL = (key) =>
 
 export function useChat(apiKey) {
   const [messages, setMessages]   = useState([])
-  const [loading, setLoading]     = useState(false)
-  const [streaming, setStreaming] = useState(false)
+  const [loading, setLoading]     = useState(false)   // waiting for first chunk
+  const [streaming, setStreaming] = useState(false)   // chunks arriving
 
   const sendMessage = useCallback(async (text, mode) => {
     if (!text.trim() || loading || streaming) return
@@ -41,7 +41,7 @@ export function useChat(apiKey) {
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
           contents,
-          generationConfig: { temperature: 0.9 },
+          generationConfig: { maxOutputTokens: 400, temperature: 0.9 },
         }),
       })
 

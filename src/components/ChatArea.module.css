@@ -160,3 +160,68 @@
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
 }
+
+/* ── Markdown rendering inside AI bubbles ── */
+.markdown { width: 100%; }
+
+.markdown p {
+  margin: 0 0 0.5rem 0;
+  line-height: 1.65;
+}
+.markdown p:last-child { margin-bottom: 0; }
+
+.markdown strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.markdown em { font-style: italic; }
+
+.markdown ul,
+.markdown ol {
+  margin: 0.4rem 0 0.5rem 1.1rem;
+  padding: 0;
+}
+
+.markdown li {
+  margin-bottom: 0.25rem;
+  line-height: 1.55;
+}
+
+.markdown blockquote {
+  margin: 0.5rem 0;
+  padding: 0.4rem 0.75rem;
+  border-left: 3px solid var(--rose);
+  background: rgba(232, 97, 74, 0.06);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--ink2);
+}
+
+.markdown code {
+  background: var(--sand);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.82em;
+  font-family: monospace;
+  color: var(--rose);
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  margin: 0.6rem 0 0.3rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.markdown hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0.6rem 0;
+}
+
+/* Remove top margin on first element */
+.markdown > *:first-child { margin-top: 0; }
