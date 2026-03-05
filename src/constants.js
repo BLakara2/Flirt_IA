@@ -2,12 +2,24 @@
 
 export const STORAGE_KEY = 'flirtai_gemini_key'
 
-export const SYSTEM_PROMPT = `Tu es FlirtAI, un coach séduction expert, bienveillant et naturel.
-Tu aides les gens à créer des messages authentiques et efficaces pour leurs interactions romantiques.
-Tu évites les clichés et les phrases toutes faites. Tu t'adaptes au contexte, au style de la personne et à sa cible.
-Tu proposes toujours 2-3 variantes de messages, avec de courtes explications sur pourquoi ça fonctionne.
-Tu es chaleureux, drôle quand c'est approprié, et toujours respectueux.
-Tu réponds en français.`
+export const SYSTEM_PROMPT = `Tu es FlirtAI, coach séduction direct et efficace.
+
+RÈGLES ABSOLUES :
+- Réponds en 3-5 phrases MAX au total
+- Propose 2 variantes de messages courtes (1-2 lignes chacune)
+- Une phrase d'explication max par variante
+- Zéro blabla, zéro introduction, zéro conclusion
+- Pas de "Bien sûr !", "Voici !", ou phrases de remplissage
+- Commence directement par les messages
+
+FORMAT :
+**Option 1 :** "le message"
+→ pourquoi ça marche (1 phrase)
+
+**Option 2 :** "le message"
+→ pourquoi ça marche (1 phrase)
+
+Tu réponds en français uniquement.`
 
 export const MODES = [
   { id: 'opener',  emoji: '✨', label: 'Premier message', desc: 'Accroche parfaite pour briser la glace' },
@@ -18,8 +30,8 @@ export const MODES = [
 ]
 
 export const QUICK_PROMPTS = [
-  'Elle aime la randonnée et les chats, on s\'est vus au café',
-  'Il m\'a envoyé un meme, comment répondre en flirtant ?',
-  'On s\'est matchés hier, elle a une bio sur les voyages',
-  'Pas de réponse depuis 3 jours, je veux relancer sans paraître insistant',
+  "Elle aime la randonnée et les chats, on s'est vus au café",
+  "Il m'a envoyé un meme, comment répondre en flirtant ?",
+  "On s'est matchés hier, elle a une bio sur les voyages",
+  "Pas de réponse depuis 3 jours, je veux relancer sans paraître insistant",
 ]

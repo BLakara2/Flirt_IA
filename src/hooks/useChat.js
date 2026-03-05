@@ -6,12 +6,17 @@ import { MODES, SYSTEM_PROMPT } from '../constants.js'
 const getTime = () =>
   new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
 
+// Gemini stream endpoint — note: streamGenerateContent + alt=sse
+const GEMINI_URL = (key) =>
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${key}`
+
 export function useChat(apiKey) {
-  const [messages, setMessages] = useState([])
-  const [loading, setLoading]   = useState(false)
+  const [messages, setMessages]   = useState([])
+  const [loading, setLoading]     = useState(false)
+  const [streaming, setStreaming] = useState(false)
 
   const sendMessage = useCallback(async (text, mode) => {
-    if (!text.trim() || loading) return
+    if (!text.trim() || loading || streaming) return
 
     const modeInfo  = MODES.find(m => m.id === mode)
     const userEntry = { role: 'user', content: text, time: getTime() }
@@ -20,48 +25,82 @@ export function useChat(apiKey) {
     setMessages(snapshot)
     setLoading(true)
 
-    // Inject mode context in the last user message
     const enriched = `[Mode actif: ${modeInfo?.emoji} ${modeInfo?.label}]\n\n${text}`
 
-    // Gemini expects role "user" | "model" and a parts array
     const contents = snapshot.map((m, i) => ({
       role: m.role === 'user' ? 'user' : 'model',
-      parts: [
-        {
-          text:
-            i === snapshot.length - 1 && m.role === 'user'
-              ? enriched
-              : m.content,
-        },
-      ],
+      parts: [{
+        text: i === snapshot.length - 1 && m.role === 'user' ? enriched : m.content,
+      }],
     }))
 
     try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-            contents,
-            generationConfig: { temperature: 0.9 },
-          }),
-        }
-      )
+      const res = await fetch(GEMINI_URL(apiKey), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents,
+          generationConfig: { temperature: 0.9 },
+        }),
+      })
 
       if (!res.ok) {
         const err = await res.json()
         throw new Error(err.error?.message || `Erreur ${res.status}`)
       }
 
-      const data  = await res.json()
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Réponse vide.'
+      // Insert empty assistant bubble immediately — fills in as chunks arrive
+      const assistantEntry = { role: 'assistant', content: '', time: getTime() }
+      setMessages(prev => [...prev, assistantEntry])
+      setLoading(false)
+      setStreaming(true)
 
-      setMessages(prev => [
-        ...prev,
-        { role: 'assistant', content: reply, time: getTime() },
-      ])
+      const reader  = res.body.getReader()
+      const decoder = new TextDecoder()
+      let accumulated = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const raw   = decoder.decode(value, { stream: true })
+        const lines = raw.split('\n')
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const json = line.slice(6).trim()
+          if (!json || json === '[DONE]') continue
+
+          try {
+            const parsed = JSON.parse(json)
+            const chunk  = parsed.candidates?.[0]?.content?.parts?.[0]?.text || ''
+            if (!chunk) continue
+
+            accumulated += chunk
+
+            setMessages(prev => {
+              const updated = [...prev]
+              updated[updated.length - 1] = {
+                ...updated[updated.length - 1],
+                content: accumulated,
+              }
+              return updated
+            })
+          } catch {
+            // malformed chunk — skip
+          }
+        }
+      }
+
+      if (!accumulated) {
+        setMessages(prev => {
+          const updated = [...prev]
+          updated[updated.length - 1] = { ...updated[updated.length - 1], content: 'Réponse vide.' }
+          return updated
+        })
+      }
+
     } catch (e) {
       const raw = e.message || ''
       let msg
@@ -78,16 +117,22 @@ export function useChat(apiKey) {
         msg = `❓ Erreur inattendue : ${raw || 'inconnue'}`
       }
 
-      setMessages(prev => [
-        ...prev,
-        { role: 'assistant', content: msg, time: getTime() },
-      ])
+      setMessages(prev => {
+        const last = prev[prev.length - 1]
+        if (last?.role === 'assistant' && last.content === '') {
+          const updated = [...prev]
+          updated[updated.length - 1] = { ...last, content: msg }
+          return updated
+        }
+        return [...prev, { role: 'assistant', content: msg, time: getTime() }]
+      })
     } finally {
       setLoading(false)
+      setStreaming(false)
     }
-  }, [messages, loading, apiKey])
+  }, [messages, loading, streaming, apiKey])
 
   const clearHistory = useCallback(() => setMessages([]), [])
 
-  return { messages, loading, sendMessage, clearHistory }
+  return { messages, loading, streaming, sendMessage, clearHistory }
 }

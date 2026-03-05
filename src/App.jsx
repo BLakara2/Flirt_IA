@@ -16,7 +16,7 @@ export default function App() {
   })
   const [mode, setMode] = useState('opener')
 
-  const { messages, loading, sendMessage, clearHistory } = useChat(apiKey)
+  const { messages, loading, streaming, sendMessage, clearHistory } = useChat(apiKey)
 
   const handleApiKey = useCallback((key) => {
     try { localStorage.setItem(STORAGE_KEY, key) } catch {}
@@ -32,8 +32,6 @@ export default function App() {
   const handleSend = useCallback((text) => {
     sendMessage(text, mode)
   }, [sendMessage, mode])
-
-
 
   return (
     <div className={styles.shell}>
@@ -51,9 +49,10 @@ export default function App() {
           <ChatArea
             messages={messages}
             loading={loading}
+            streaming={streaming}
             onQuickPrompt={handleSend}
           />
-          <InputBar onSend={handleSend} loading={loading} mode={mode} />
+          <InputBar onSend={handleSend} loading={loading || streaming} mode={mode} />
         </>
       )}
     </div>

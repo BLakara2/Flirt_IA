@@ -1,48 +1,29 @@
 // ─── components/ChatArea.jsx ──────────────────────────────────────────────────
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { QUICK_PROMPTS } from '../constants.js'
 import styles from './ChatArea.module.css'
 
+// ── Message ───────────────────────────────────────────────────────────────────
+
 function Message({ msg }) {
-  const isUser = msg.role === "user"
-  const [displayedText, setDisplayedText] = useState(isUser ? msg.content : "")
-
-  useEffect(() => {
-    if (isUser) return
-
-    let index = 0
-    const speed = 2
-
-    const interval = setInterval(() => {
-      setDisplayedText(msg.content.slice(0, index + 1))
-      index++
-
-      if (index >= msg.content.length) {
-        clearInterval(interval)
-      }
-    }, speed)
-
-    return () => clearInterval(interval)
-  }, [msg.content, isUser])
-
+  const isUser = msg.role === 'user'
   return (
     <div className={`${styles.message} ${isUser ? styles.user : styles.ai}`}>
-      <div className={styles.avatar}>{isUser ? "😎" : "💘"}</div>
-
+      <div className={styles.avatar}>{isUser ? '😎' : '💘'}</div>
       <div className={styles.content}>
-        <div className={styles.bubble} style={{ whiteSpace: "pre-wrap" }}>
-          {displayedText}
+        <div className={styles.bubble} style={{ whiteSpace: 'pre-wrap' }}>
+          {msg.content}
+          {/* blinking cursor while the bubble is still empty or being filled */}
+          {!isUser && msg.streaming && <span className={styles.cursor} />}
         </div>
-
         <div className={styles.time}>{msg.time}</div>
       </div>
     </div>
   )
 }
 
-
-// ── TypingIndicator ───────────────────────────────────────────────────────────
+// ── TypingIndicator (shown while waiting for FIRST chunk) ─────────────────────
 
 function TypingIndicator() {
   return (
@@ -59,7 +40,7 @@ function TypingIndicator() {
 
 // ── ChatArea ──────────────────────────────────────────────────────────────────
 
-export default function ChatArea({ messages, loading, onQuickPrompt }) {
+export default function ChatArea({ messages, loading, streaming, onQuickPrompt }) {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -67,6 +48,10 @@ export default function ChatArea({ messages, loading, onQuickPrompt }) {
       ref.current.scrollTop = ref.current.scrollHeight
     }
   }, [messages, loading])
+
+  // Last message is the one being streamed right now
+  const lastIsStreaming = streaming && messages.length > 0 &&
+    messages[messages.length - 1].role === 'assistant'
 
   return (
     <div className={styles.area} ref={ref}>
@@ -89,8 +74,13 @@ export default function ChatArea({ messages, loading, onQuickPrompt }) {
       ) : (
         <>
           {messages.map((msg, i) => (
-            <Message key={i} msg={msg} />
+            <Message
+              key={i}
+              msg={msg}
+              streaming={lastIsStreaming && i === messages.length - 1}
+            />
           ))}
+          {/* Show dots only while waiting for first chunk, not during streaming */}
           {loading && <TypingIndicator />}
         </>
       )}

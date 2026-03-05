@@ -16,7 +16,7 @@ export default function ApiSetup({ onSubmit }) {
     <div className={styles.wrap}>
       <div className={styles.card}>
         <div className={styles.logo}>✨</div>
-        <div className={styles.badge}>Propulsé par Gemini 2.5 Flash · Gratuit</div>
+        <div className={styles.badge}>⚡ Propulsé par Gemini 2.5 Flash · Gratuit</div>
         <h2 className={styles.title}>Connecte Gemini</h2>
         <p className={styles.desc}>
           Crée ta clé API <strong>gratuite</strong> en 30 secondes sur Google AI Studio.
