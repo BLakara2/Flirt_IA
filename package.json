@@ -1,7 +1,7 @@
 {
-  "name": "flirt-ai",
-  "private": true,
+  "name": "flirtai",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,7 +14,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.2",
-    "vite-plugin-pwa": "^0.20.5"
+    "vite": "^5.4.1"
   }
 }

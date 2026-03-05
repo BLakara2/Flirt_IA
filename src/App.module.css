@@ -1,9 +1,22 @@
+/* ─── App.module.css ──────────────────────────────────────────────────────── */
+
 .shell {
-  width: 100%;
-  max-width: 780px;
-  height: 100%;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  height: 100dvh;
+  max-width: 680px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Ambient background gradient */
+.shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 10%, rgba(232, 97, 74, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(66, 133, 244, 0.07) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
 }

@@ -1,21 +1,48 @@
-import { useEffect, useRef } from 'react'
+// ─── components/ChatArea.jsx ──────────────────────────────────────────────────
+
+import { useState, useEffect, useRef } from 'react'
 import { QUICK_PROMPTS } from '../constants.js'
 import styles from './ChatArea.module.css'
 
 function Message({ msg }) {
-  const isUser = msg.role === 'user'
+  const isUser = msg.role === "user"
+  const [displayedText, setDisplayedText] = useState(isUser ? msg.content : "")
+
+  useEffect(() => {
+    if (isUser) return
+
+    let index = 0
+    const speed = 2
+
+    const interval = setInterval(() => {
+      setDisplayedText(msg.content.slice(0, index + 1))
+      index++
+
+      if (index >= msg.content.length) {
+        clearInterval(interval)
+      }
+    }, speed)
+
+    return () => clearInterval(interval)
+  }, [msg.content, isUser])
+
   return (
     <div className={`${styles.message} ${isUser ? styles.user : styles.ai}`}>
-      <div className={styles.avatar}>{isUser ? '😎' : '💘'}</div>
+      <div className={styles.avatar}>{isUser ? "😎" : "💘"}</div>
+
       <div className={styles.content}>
-        <div className={styles.bubble} style={{ whiteSpace: 'pre-wrap' }}>
-          {msg.content}
+        <div className={styles.bubble} style={{ whiteSpace: "pre-wrap" }}>
+          {displayedText}
         </div>
+
         <div className={styles.time}>{msg.time}</div>
       </div>
     </div>
   )
 }
+
+
+// ── TypingIndicator ───────────────────────────────────────────────────────────
 
 function TypingIndicator() {
   return (
@@ -29,6 +56,8 @@ function TypingIndicator() {
     </div>
   )
 }
+
+// ── ChatArea ──────────────────────────────────────────────────────────────────
 
 export default function ChatArea({ messages, loading, onQuickPrompt }) {
   const ref = useRef(null)

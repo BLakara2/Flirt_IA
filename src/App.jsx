@@ -1,27 +1,30 @@
-import { useState, useCallback } from 'react'
-import ApiSetup from './components/ApiSetup.jsx'
-import Header   from './components/Header.jsx'
-import ModeBar  from './components/ModeBar.jsx'
-import ChatArea from './components/ChatArea.jsx'
-import InputBar from './components/InputBar.jsx'
-import { useChat } from './hooks/useChat.js'
-import styles from './App.module.css'
+// ─── App.jsx ──────────────────────────────────────────────────────────────────
 
-const STORAGE_KEY = 'flirt_api_key'
+import { useState, useCallback } from 'react'
+import { STORAGE_KEY } from './constants.js'
+import { useChat }     from './hooks/useChat.js'
+import ApiSetup        from './components/ApiSetup.jsx'
+import Header          from './components/Header.jsx'
+import ModeBar         from './components/ModeBar.jsx'
+import ChatArea        from './components/ChatArea.jsx'
+import InputBar        from './components/InputBar.jsx'
+import styles          from './App.module.css'
 
 export default function App() {
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem(STORAGE_KEY) || '')
-  const [mode, setMode]     = useState('opener')
+  const [apiKey, setApiKey] = useState(() => {
+    try { return localStorage.getItem(STORAGE_KEY) || '' } catch { return '' }
+  })
+  const [mode, setMode] = useState('opener')
 
   const { messages, loading, sendMessage, clearHistory } = useChat(apiKey)
 
   const handleApiKey = useCallback((key) => {
-    localStorage.setItem(STORAGE_KEY, key)
+    try { localStorage.setItem(STORAGE_KEY, key) } catch {}
     setApiKey(key)
   }, [])
 
   const handleLogout = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY)
+    try { localStorage.removeItem(STORAGE_KEY) } catch {}
     setApiKey('')
     clearHistory()
   }, [clearHistory])
@@ -30,14 +33,7 @@ export default function App() {
     sendMessage(text, mode)
   }, [sendMessage, mode])
 
-  if (!apiKey) {
-    return (
-      <div className={styles.shell}>
-        <Header onLogout={() => {}} onClear={() => {}} hasMessages={false} />
-        <ApiSetup onSubmit={handleApiKey} />
-      </div>
-    )
-  }
+
 
   return (
     <div className={styles.shell}>
@@ -46,13 +42,20 @@ export default function App() {
         onClear={clearHistory}
         hasMessages={messages.length > 0}
       />
-      <ModeBar active={mode} onChange={setMode} />
-      <ChatArea
-        messages={messages}
-        loading={loading}
-        onQuickPrompt={handleSend}
-      />
-      <InputBar onSend={handleSend} loading={loading} mode={mode} />
+
+      {!apiKey ? (
+        <ApiSetup onSubmit={handleApiKey} />
+      ) : (
+        <>
+          <ModeBar active={mode} onChange={setMode} />
+          <ChatArea
+            messages={messages}
+            loading={loading}
+            onQuickPrompt={handleSend}
+          />
+          <InputBar onSend={handleSend} loading={loading} mode={mode} />
+        </>
+      )}
     </div>
   )
 }

@@ -1,3 +1,9 @@
+/* ─── index.css ───────────────────────────────────────────────────────────────
+   Global styles & CSS variables for FlirtAI
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -5,64 +11,37 @@
 }
 
 :root {
-  --bg: #0a0608;
-  --surface: #14090f;
-  --card: #1e0f1a;
-  --border: #3d1f35;
-  --accent: #e8436a;
-  --accent2: #ff8fa3;
-  --gold: #c9a96e;
-  --text: #f5e6ee;
-  --muted: #9e7a8f;
-  --user-bubble: #2a0f22;
-  --ai-bubble: #1a0d16;
-  --glow: rgba(232, 67, 106, 0.25);
-  --radius: 18px;
+  --rose:   #e8614a;
+  --rose2:  #f2856e;
+  --cream:  #fdf6ee;
+  --sand:   #f0e6d8;
+  --ink:    #1a1410;
+  --ink2:   #4a3728;
+  --muted:  #8a7060;
+  --border: rgba(74, 55, 40, 0.12);
+  --card:   rgba(255, 252, 248, 0.9);
+  --shadow: 0 4px 32px rgba(26, 20, 16, 0.10);
+  --gemini: #4285f4;
 }
 
 html, body, #root {
   height: 100%;
-  width: 100%;
-  overflow: hidden;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
   font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  -webkit-font-smoothing: antialiased;
-  background-image:
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(200, 40, 80, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(180, 30, 100, 0.06) 0%, transparent 50%);
+  background: var(--cream);
+  color: var(--ink);
+  overflow: hidden;
 }
 
-button { cursor: pointer; }
-
-textarea, input {
-  font-family: 'DM Sans', sans-serif;
-}
-
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 20px var(--glow); }
-  50%       { box-shadow: 0 0 38px rgba(232, 67, 106, 0.45); }
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.35; }
-}
-
+/* ── Shared animations ── */
 @keyframes bounce {
   0%, 60%, 100% { transform: translateY(0);   opacity: 0.4; }
-  30%           { transform: translateY(-7px); opacity: 1;   }
+  30%            { transform: translateY(-6px); opacity: 1;   }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
 }

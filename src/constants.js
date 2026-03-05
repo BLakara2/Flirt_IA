@@ -1,35 +1,25 @@
+// ─── constants.js ─────────────────────────────────────────────────────────────
+
+export const STORAGE_KEY = 'flirtai_gemini_key'
+
+export const SYSTEM_PROMPT = `Tu es FlirtAI, un coach séduction expert, bienveillant et naturel.
+Tu aides les gens à créer des messages authentiques et efficaces pour leurs interactions romantiques.
+Tu évites les clichés et les phrases toutes faites. Tu t'adaptes au contexte, au style de la personne et à sa cible.
+Tu proposes toujours 2-3 variantes de messages, avec de courtes explications sur pourquoi ça fonctionne.
+Tu es chaleureux, drôle quand c'est approprié, et toujours respectueux.
+Tu réponds en français.`
+
 export const MODES = [
-  { id: 'opener',     emoji: '💬', label: 'Première approche', desc: "Message d'accroche" },
-  { id: 'rizz',       emoji: '🔥', label: 'Rizz intense',       desc: 'Niveau conf max'   },
-  { id: 'tinder',     emoji: '📱', label: 'Tinder / Insta',     desc: 'Reply DM'          },
-  { id: 'date',       emoji: '🍷', label: 'Inviter en date',    desc: 'Proposer de se voir'},
-  { id: 'recovery',   emoji: '😅', label: 'Sauvetage',          desc: 'Après une gaffe'   },
-  { id: 'compliment', emoji: '✨', label: 'Compliment',         desc: 'Unique et mémorable'},
+  { id: 'opener',  emoji: '✨', label: 'Premier message', desc: 'Accroche parfaite pour briser la glace' },
+  { id: 'flirt',   emoji: '🔥', label: 'Flirter',         desc: 'Monter la tension et le désir' },
+  { id: 'date',    emoji: '📍', label: 'Proposer un date', desc: 'Inviter naturellement sans paraître désespéré' },
+  { id: 'reply',   emoji: '💬', label: 'Répondre',        desc: 'Réagir à un message reçu' },
+  { id: 'relance', emoji: '🎯', label: 'Relancer',        desc: 'Recontacter après un silence' },
 ]
 
 export const QUICK_PROMPTS = [
-  "Elle aime les chats et le voyage, quoi lui écrire ?",
-  "Elle m'a ghosté depuis 3 jours, comment relancer ?",
-  "Comment l'inviter prendre un café naturellement ?",
-  "Premier message Instagram depuis sa story",
-  "Elle répond en mode froid, comment réchauffer ça ?",
-  "Comment répondre à son meme sans passer pour un normie ?",
+  'Elle aime la randonnée et les chats, on s\'est vus au café',
+  'Il m\'a envoyé un meme, comment répondre en flirtant ?',
+  'On s\'est matchés hier, elle a une bio sur les voyages',
+  'Pas de réponse depuis 3 jours, je veux relancer sans paraître insistant',
 ]
-
-export const SYSTEM_PROMPT = `Tu es FlirtAI, un coach séduction expert, stylé et bienveillant. Tu aides les hommes à communiquer avec confiance et authenticité avec les femmes qu'ils apprécient.
-
-Ton style :
-- Toujours respectueux, jamais manipulateur ou toxique
-- Messages courts, naturels, authentiques — jamais cheesy ou forcés
-- Tu donnes 2-3 variantes par niveau d'audace (🟢 Soft / 🟡 Medium / 🔴 Bold)
-- Tu expliques brièvement POURQUOI ça marche (psychologie, dynamique sociale)
-- Tu adaptes au contexte (appli, IRL, personnalité de la meuf)
-- Tu utilises du français naturel, moderne, parfois avec un peu d'argot
-- Tu es fun, direct et efficace
-
-Structure tes réponses ainsi :
-1. Lecture rapide de la situation (1-2 phrases max)
-2. Les 2-3 variantes avec leur niveau
-3. Un tip bonus ou mise en garde si pertinent
-
-Rappelle régulièrement que l'authenticité et le respect sont la vraie base de la séduction.`

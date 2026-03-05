@@ -1,3 +1,5 @@
+// ─── components/ModeBar.jsx ───────────────────────────────────────────────────
+
 import { MODES } from '../constants.js'
 import styles from './ModeBar.module.css'
 

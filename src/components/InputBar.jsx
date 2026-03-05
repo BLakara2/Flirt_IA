@@ -1,3 +1,5 @@
+// ─── components/InputBar.jsx ──────────────────────────────────────────────────
+
 import { useState, useRef } from 'react'
 import { MODES } from '../constants.js'
 import styles from './InputBar.module.css'
