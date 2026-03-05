@@ -7,7 +7,7 @@ const getTime = () =>
   new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
 
 const GEMINI_URL = (key) =>
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:streamGenerateContent?alt=sse&key=${key}`
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${key}`
 
 export function useChat(apiKey) {
   const [messages, setMessages]       = useState([])
@@ -53,7 +53,7 @@ export function useChat(apiKey) {
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
           contents,
-          generationConfig: { maxOutputTokens: 400, temperature: 0.9 },
+          generationConfig: { maxOutputTokens: 40000, temperature: 0.9 },
         }),
       })
 
