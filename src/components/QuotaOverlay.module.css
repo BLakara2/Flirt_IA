@@ -1,0 +1,167 @@
+/* ─── QuotaOverlay.module.css ────────────────────────────────────────────── */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(253, 246, 238, 0.96);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  max-width: 280px;
+}
+
+/* ── Scene ── */
+.scene {
+  position: relative;
+  width: 200px;
+  height: 90px;
+  margin-bottom: 0.5rem;
+}
+
+.ground {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--rose2), transparent);
+  border-radius: 2px;
+}
+
+/* ── Stick figures ── */
+.figure {
+  position: absolute;
+  bottom: 2px;
+  width: 36px;
+  height: 54px;
+  color: var(--rose);
+}
+
+/* Position each figure */
+.figure:nth-child(2) { left: 20px;  }
+.figure:nth-child(3) { left: 80px;  }
+.figure:nth-child(4) { left: 140px; }
+
+/* Walk animation — body bobs, legs swing */
+.walk {
+  animation: walkBob 0.6s ease-in-out infinite alternate;
+}
+.walk .armLeft  { transform-origin: 20px 24px; animation: swingArmL 0.6s ease-in-out infinite alternate; }
+.walk .armRight { transform-origin: 20px 24px; animation: swingArmR 0.6s ease-in-out infinite alternate; }
+.walk .legLeft  { transform-origin: 20px 38px; animation: swingLegL 0.6s ease-in-out infinite alternate; }
+.walk .legRight { transform-origin: 20px 38px; animation: swingLegR 0.6s ease-in-out infinite alternate; }
+
+/* Jump animation */
+.jump {
+  animation: jumpUp 0.9s ease-in-out infinite;
+}
+.jump .armLeft  { transform-origin: 20px 24px; animation: raiseArm 0.9s ease-in-out infinite; }
+.jump .armRight { transform-origin: 20px 24px; animation: raiseArm 0.9s ease-in-out infinite; }
+
+@keyframes walkBob {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-3px); }
+}
+
+@keyframes swingArmL {
+  from { transform: rotate(-20deg); }
+  to   { transform: rotate(20deg);  }
+}
+@keyframes swingArmR {
+  from { transform: rotate(20deg);  }
+  to   { transform: rotate(-20deg); }
+}
+@keyframes swingLegL {
+  from { transform: rotate(-18deg); }
+  to   { transform: rotate(18deg);  }
+}
+@keyframes swingLegR {
+  from { transform: rotate(18deg);  }
+  to   { transform: rotate(-18deg); }
+}
+
+@keyframes jumpUp {
+  0%, 100% { transform: translateY(0px);   }
+  40%       { transform: translateY(-20px); }
+  60%       { transform: translateY(-20px); }
+}
+@keyframes raiseArm {
+  0%, 100% { transform: rotate(0deg);   }
+  40%, 60% { transform: rotate(-60deg); }
+}
+
+/* ── Clock ── */
+.clockWrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  color: var(--ink2);
+  animation: floatClock 2s ease-in-out infinite alternate;
+}
+
+.clock { width: 100%; height: 100%; }
+
+@keyframes floatClock {
+  from { transform: translateY(0px) rotate(-5deg); }
+  to   { transform: translateY(-6px) rotate(5deg); }
+}
+
+/* ── Countdown ── */
+.countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.countNum {
+  font-family: 'Fraunces', serif;
+  font-size: 3.5rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--rose);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1);    opacity: 1;   }
+  50%       { transform: scale(1.08); opacity: 0.8; }
+}
+
+.countLabel {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── Text ── */
+.msg {
+  font-size: 0.9rem;
+  color: var(--ink2);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.sub {
+  font-size: 0.72rem;
+  color: var(--muted);
+}

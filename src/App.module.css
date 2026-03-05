@@ -20,3 +20,11 @@
   pointer-events: none;
   z-index: 0;
 }
+
+.chatZone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
